@@ -37,29 +37,14 @@ const readableNumbersTableTwentyHundred = {
 const hundred = 'hundred';
 
 module.exports = function toReadable (number) {
-        let phrase = String(number);
-        if (number = 0) phrase = 'zero';
-        if (number > 0 && number < 10) {
-          for(let i=0;i<number;i++) {
-            phrase = readableNumbersTableOneTen[number];
-          }
-        }
-        if (number >= 10 && number < 20) {
-          for(let i=0;i<number;i++) {
-            phrase = readableNumbersTableTenTwenty[number];
-          }
-        }
-        if (number >= 20 && number < 100) {
-          for(let i=0;i<number;i++) {
-            let arr = [...String(number).split('')];
-            phrase = `${readableNumbersTableTwentyHundred[arr[0]]} ${readableNumbersTableOneTen[arr[1]]}`;
-          }
-        }
-        if (number >= 10 && number < 1000) {
-          for(let i=0;i<number;i++) {
-            let arr = [...String(number).split('')];
-            phrase = `${readableNumbersTableOneTen[arr[0]]} ${hundred} ${readableNumbersTableTwentyHundred[arr[1]]} ${readableNumbersTableOneTen[arr[2]]}`;
-          }
-        }
-        return phrase;
+  let phrase = String(number);
+  if (number === 0) return  'zero';
+  let arr = [...String(number).split('')];
+  let result = '';
+  let ones = (arr[arr.length-2] !== '1' && arr[arr.length-1] !== '0') ? readableNumbersTableOneTen[arr[arr.length-1]] : '';
+  let tens = (phrase.slice(-2,-1) === '1') ? readableNumbersTableTenTwenty[phrase.slice(-2)] : readableNumbersTableTwentyHundred[arr[arr.length-2]] || '';
+  let hundreds = (readableNumbersTableOneTen[arr[arr.length-3]]) ? `${readableNumbersTableOneTen[arr[arr.length-3]]} ${hundred}` : '';
+
+  result = `${hundreds} ${tens} ${ones}`;
+  return result.replace(/\s+/g, ' ').trim();
 }
